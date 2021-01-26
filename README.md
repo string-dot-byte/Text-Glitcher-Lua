@@ -1,3 +1,5 @@
+# File preparation, this is not ready yet. Writing documentation as development goes
+
 # Text-Glitcher-Lua
 
 
