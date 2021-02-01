@@ -1,5 +1,3 @@
-# File preparation, this is not ready yet. Writing documentation as development goes
-
 # Text-Glitcher-Lua
 
 Text-Glitcher is a Roblox module which permits you to have glitched text effect with some symbols. Great use for horror type games or perhaps to give a cool effect.
@@ -7,7 +5,7 @@ Text-Glitcher is a Roblox module which permits you to have glitched text effect 
 With the utilisation of TweenService, I have brought to you this module which permits text tweens almost the same way you would do for normal tweening.
 
 <p align="center">
-  <img src="https://media.discordapp.net/attachments/769655840985579520/801955296183582750/3M75PUZhkU.gif" alt="Lightning demo" height="500">
+  <img src="https://media.discordapp.net/attachments/769655840985579520/801955296183582750/3M75PUZhkU.gif" alt="Glitcher demo" height="500">
 </p>
 
 The idea to open source this module and add more features came to me just by having a chat with my girlfriend on open sourced scripts. 
