@@ -1,5 +1,5 @@
 local StringLib = {}
-local class = require(script.Class)
+local class = require(script.Parent.Class)
 
 local TweenService = game:GetService('TweenService')
 
