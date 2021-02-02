@@ -38,6 +38,7 @@ Now there I'm making a TextGlitcher function with a TweenInfo which will then be
 | Reversed | Wether the style should play in reverse (Example: Linear; from last to first). | false | Boolean
 | Yielding | Should it Yield while you are running it. | true | Boolean
 | SingleHash | Should it only create one glitched text for the whole glitching? | false | Boolean
+| TweenInfo | The tween information, explanable on the docs | None (errors) | TweenInfo
 
 
 ### Glitcher:GlitchText()
