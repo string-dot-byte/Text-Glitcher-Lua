@@ -2,6 +2,8 @@ local StringLib = {}
 local class = require(script.Parent.Class)
 
 local TweenService = game:GetService('TweenService')
+local RunService = game:GetService('RunService')
+
 
 -- Glitch text setup
 local Possible, createHash do
@@ -27,22 +29,24 @@ local StylesFunction = {} do
 		local FullString = self.FullString
 
 		local Int = Instance.new('IntValue')
-		local Completed = false
 		Int.Value = 0 -- Hehe :)
 
 		local tween = TweenService:Create(Int, self.TweenInfo, {Value = #FullString})
+		self.tween = tween
 		tween:Play()
-		tween.Completed:Connect(function()Completed = true end)
+		tween.Completed:Connect(function()self.Completed = true end)
 		
 		local SingleHash = createHash(#FullString)
 		
 		local f = function()
-			while not Completed do wait()
+			while not self.Completed do wait()
 				local Hash = self.SingleHash and SingleHash:sub(self.Reversed and 1 or Int.Value, self.Reversed and #FullString-Int.Value or #FullString) or createHash(#FullString-Int.Value)
 				self.TextDisplay.Text = self.Reversed and Hash .. FullString:sub(#FullString-Int.Value+1, #FullString) or FullString:sub(1, Int.Value) .. Hash
 			end
 			self.Completed = true
+			Int:Destroy() -- destroy
 		end
+		
 		if self.Yielding == false then
 			coroutine.wrap(f)()
 		else
@@ -56,12 +60,14 @@ local StringAction = class() do
 		if typeof(FullString) ~= 'string' then
 			warn('Miss used type for first argument; Use a string instead.')
 		end
-		--[[ Note: Add checks to see if user passed TweenInfo correctly ]]
 		
 		self.FullString = FullString
 		self.TextDisplay = TextDisplayer
-		self.Yielding = info.Yielding or true
-		--self.style = info.Style or ''
+		if info.Yielding == false then
+			self.Yielding = false
+		else
+			self.Yielding = true
+		end
 		self.Reversed = info.Reversed or false
 		self.SingleHash = info.SingleHash or false
 		
@@ -69,16 +75,29 @@ local StringAction = class() do
 	end
 	
 	function StringAction:GlitchText()
-		--if StylesFunction[self.style]then
-			--StylesFunction[self.style](self)
-		--else
-			StylesFunction.EasingStyle(self)
-		--end
-		return self.FullString -- In case anyone sets the Text property to the function
+		StylesFunction.EasingStyle(self)
+		--return self.FullString
 	end
 	
 	function StringAction:IsCompleted()
 		return self.Completed or false
+	end
+	
+	function StringAction:Cancel()
+		self.Completed = true
+		self.tween:Cancel()
+	end
+	
+	function StringAction:Pause()
+		self.tween:Pause()
+	end
+	
+	function StringAction:Resume()
+		self.tween:Play()
+	end
+	
+	function StringAction:GetState()
+		return self.tween.PlaybackState
 	end
 end
 
