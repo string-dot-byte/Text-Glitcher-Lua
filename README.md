@@ -45,8 +45,6 @@ Now there I'm making a TextGlitcher function with a TweenInfo which will then be
 
 Starts the glitching with the options passed into `TextGlitcher.new()`
 
-- Returns the end expected string (don't ask)
-
 
 ### Glitcher:IsCompleted()
 
@@ -55,6 +53,22 @@ If the glitching has been completed.
 - Returns a boolean.
 
 
+### Glitcher:Cancel()
+
+Cancels and ends the glitching tween.
 
 
+### Glitcher:Pause()
 
+Pauses the current tween until it's been called again by `Glitcher:Play()` or until it has been cancelled.
+
+
+### Glitcher:Resume()
+
+Resumes the paused tween.
+
+
+### Glitcher:GetState()
+
+Gets the PlaybackState of the playing tween on the glitcher.
+See more here: https://developer.roblox.com/en-us/api-reference/enum/PlaybackState
