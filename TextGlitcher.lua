@@ -57,7 +57,7 @@ end
 
 local StringAction = class() do
 	function StringAction:init(FullString, TextDisplayer, info)
-		if typeof(FullString) ~= 'string' then
+		if type(FullString) ~= 'string' then
 			warn('Miss used type for first argument; Use a string instead.')
 		end
 		
