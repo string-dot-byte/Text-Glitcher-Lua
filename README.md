@@ -53,6 +53,11 @@ If the glitching has been completed.
 - Returns a boolean.
 
 
+### Glitcher:Hash()
+
+Hashes the GUI's text directly. You can call this multiple times but will not show the actual string. Look at `Glitcher:GlitchText()` instead for text glitching.
+
+
 ### Glitcher:Cancel()
 
 Cancels and ends the glitching tween.
