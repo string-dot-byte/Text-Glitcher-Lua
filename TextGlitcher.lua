@@ -9,8 +9,8 @@ local RunService = game:GetService('RunService')
 local Possible, createHash do
 	Possible = {
 		'-','+','*','/','|','}','{','[',']','~','\\','"',
-		':',';','?','/','.','>','<','=','+','-','_',')',
-		'(','*','&','%','$','#','@','!',')','}'
+		':',';','?','.','>','<','=','+','-','_',')',
+		'(','*','&','%','$','#','@','!'
 	}
 	createHash = function(amount)
 		if amount <= 0 then return '' end
@@ -36,7 +36,7 @@ local StylesFunction = {} do
 		tween:Play()
 		tween.Completed:Connect(function()self.Completed = true end)
 		
-		local SingleHash = createHash(#FullString)
+		local SingleHash = self.Hashed or createHash(#FullString)
 		
 		local f = function()
 			while not self.Completed do wait()
@@ -81,6 +81,11 @@ local StringAction = class() do
 	
 	function StringAction:IsCompleted()
 		return self.Completed or false
+	end
+	
+	function StringAction:Hash()
+		self.Hashed = createHash(#self.FullString)
+		self.TextDisplay.Text = self.Hashed
 	end
 	
 	function StringAction:Cancel()
