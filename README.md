@@ -65,7 +65,7 @@ Cancels and ends the glitching tween.
 
 ### Glitcher:Pause()
 
-Pauses the current tween until it's been called again by `Glitcher:Play()` or until it has been cancelled.
+Pauses the current tween until it's been called again by `Glitcher:Resume()` or until it has been cancelled.
 
 
 ### Glitcher:Resume()
