@@ -5,8 +5,8 @@ Text-Glitcher is a Roblox module which permits you to have glitched text effect 
 With the utilisation of TweenService, I have brought to you this module which permits text tweens almost the same way you would do for normal tweening.
 
 <p align="center">
-  <img src="https://cdn.discordapp.com/attachments/577991646449238016/847567303116849152/ezgif-2-ab923b990e8b.gif" alt="Glitcher demo" height="500">
-  <img src="https://cdn.discordapp.com/attachments/577991646449238016/847567323790966814/3M75PUZhkU.gif" alt="Glitcher demo" height="500">
+  <img src="https://cdn.discordapp.com/attachments/577991646449238016/847567303116849152/ezgif-2-ab923b990e8b.gif" alt="Glitcher demo" height="200">
+  <img src="https://cdn.discordapp.com/attachments/577991646449238016/847567323790966814/3M75PUZhkU.gif" alt="Glitcher demo" height="200">
 </p>
 
 The idea to open source this module and add more features came to me just by having a chat with my girlfriend on open sourced scripts. 
