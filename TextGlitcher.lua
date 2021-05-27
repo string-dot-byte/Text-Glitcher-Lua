@@ -53,6 +53,34 @@ local StylesFunction = {} do
 			f()
 		end
 	end
+	
+	StylesFunction.Suffix = function(self)
+		local FullString = self.FullString
+		local Suffix = self.Suffix or ''
+
+		local Int = Instance.new('IntValue')
+		Int.Value = 0 -- Hehe :)
+
+		local tween = TweenService:Create(Int, self.TweenInfo, {Value = #FullString})
+		self.tween = tween
+		tween:Play()
+		tween.Completed:Connect(function()self.Completed = true end)
+		
+		local f = function()
+			while not self.Completed do wait()
+				local Suffix = Int.Value == #FullString and '' or Suffix
+				self.TextDisplay.Text = FullString:sub(1, Int.Value) .. Suffix
+			end
+			self.Completed = true
+			Int:Destroy()
+		end
+
+		if self.Yielding == false then
+			coroutine.wrap(f)()
+		else
+			f()
+		end
+	end
 end
 
 local StringAction = class() do
@@ -71,10 +99,16 @@ local StringAction = class() do
 		self.Reversed = info.Reversed or false
 		self.SingleHash = info.SingleHash or false
 		
+		self.Suffix = info.Suffix
+		
 		self.TweenInfo = info.TweenInfo
 	end
 	
-	function StringAction:GlitchText()
+	function StringAction:GlitchText(style)
+		if StylesFunction[style] then
+			StylesFunction[style](self)
+			return
+		end
 		StylesFunction.EasingStyle(self)
 		--return self.FullString
 	end
