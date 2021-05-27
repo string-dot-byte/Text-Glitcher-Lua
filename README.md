@@ -5,7 +5,8 @@ Text-Glitcher is a Roblox module which permits you to have glitched text effect 
 With the utilisation of TweenService, I have brought to you this module which permits text tweens almost the same way you would do for normal tweening.
 
 <p align="center">
-  <img src="https://media.discordapp.net/attachments/769655840985579520/801955296183582750/3M75PUZhkU.gif" alt="Glitcher demo" height="500">
+  <img src="https://cdn.discordapp.com/attachments/577991646449238016/847567303116849152/ezgif-2-ab923b990e8b.gif" alt="Glitcher demo" height="500">
+  <img src="https://cdn.discordapp.com/attachments/577991646449238016/847567323790966814/3M75PUZhkU.gif" alt="Glitcher demo" height="500">
 </p>
 
 The idea to open source this module and add more features came to me just by having a chat with my girlfriend on open sourced scripts. 
@@ -39,9 +40,10 @@ Now there I'm making a TextGlitcher function with a TweenInfo which will then be
 | Yielding | Should it Yield while you are running it. | true | Boolean
 | SingleHash | Should it only create one glitched text for the whole glitching? | false | Boolean
 | TweenInfo | The tween information, explanable on the docs | None (errors) | TweenInfo
+| Suffix | (If using the custom Suffix style) Text suffix | Empty string | String
 
 
-### Glitcher:GlitchText()
+### Glitcher:GlitchText(*style*)
 
 Starts the glitching with the options passed into `TextGlitcher.new()`
 
@@ -77,3 +79,8 @@ Resumes the paused tween.
 
 Gets the PlaybackState of the playing tween on the glitcher.
 See more here: https://developer.roblox.com/en-us/api-reference/enum/PlaybackState
+
+
+Current styles are:
+* `Suffix`: Where the text typewrites itself with an optional character at the end
+Pass in the `Suffix` index as string in the information when creating the glitcher.
