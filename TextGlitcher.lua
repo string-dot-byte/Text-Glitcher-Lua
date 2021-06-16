@@ -35,25 +35,17 @@ local StylesFunction = {} do
 		self.tween = tween
 		tween:Play()
 		tween.Completed:Connect(function()self.Completed = true end)
-		
+
 		local SingleHash = self.Hashed or createHash(#FullString)
-		
-		local f = function()
-			while not self.Completed do wait()
-				local Hash = self.SingleHash and SingleHash:sub(self.Reversed and 1 or Int.Value, self.Reversed and #FullString-Int.Value or #FullString) or createHash(#FullString-Int.Value)
-				self.TextDisplay.Text = self.Reversed and Hash .. FullString:sub(#FullString-Int.Value+1, #FullString) or FullString:sub(1, Int.Value) .. Hash
-			end
-			self.Completed = true
-			Int:Destroy() -- destroy
+
+		while not self.Completed do wait()
+			local Hash = self.SingleHash and SingleHash:sub(self.Reversed and 1 or Int.Value, self.Reversed and #FullString-Int.Value or #FullString) or createHash(#FullString-Int.Value)
+			self.TextDisplay.Text = self.Reversed and Hash .. FullString:sub(#FullString-Int.Value+1, #FullString) or FullString:sub(1, Int.Value) .. Hash
 		end
-		
-		if self.Yielding == false then
-			coroutine.wrap(f)()
-		else
-			f()
-		end
+		self.Completed = true
+		Int:Destroy() -- destroy
 	end
-	
+
 	StylesFunction.Suffix = function(self)
 		local FullString = self.FullString
 		local Suffix = self.Suffix or ''
@@ -65,21 +57,13 @@ local StylesFunction = {} do
 		self.tween = tween
 		tween:Play()
 		tween.Completed:Connect(function()self.Completed = true end)
-		
-		local f = function()
-			while not self.Completed do wait()
-				local Suffix = Int.Value == #FullString and '' or Suffix
-				self.TextDisplay.Text = FullString:sub(1, Int.Value) .. Suffix
-			end
-			self.Completed = true
-			Int:Destroy()
-		end
 
-		if self.Yielding == false then
-			coroutine.wrap(f)()
-		else
-			f()
+		while not self.Completed do wait()
+			local Suffix = Int.Value == #FullString and '' or Suffix
+			self.TextDisplay.Text = FullString:sub(1, Int.Value) .. Suffix
 		end
+		self.Completed = true
+		Int:Destroy()
 	end
 end
 
@@ -88,7 +72,7 @@ local StringAction = class() do
 		if type(FullString) ~= 'string' then
 			warn('Miss used type for first argument; Use a string instead.')
 		end
-		
+
 		self.FullString = FullString
 		self.TextDisplay = TextDisplayer
 		if info.Yielding == false then
@@ -98,43 +82,52 @@ local StringAction = class() do
 		end
 		self.Reversed = info.Reversed or false
 		self.SingleHash = info.SingleHash or false
-		
+
 		self.Suffix = info.Suffix
-		
+
 		self.TweenInfo = info.TweenInfo
 	end
-	
+
 	function StringAction:GlitchText(style)
 		if StylesFunction[style] then
+			if self.Yielding == false then
+				coroutine.wrap(StylesFunction[style])(self)
+				return
+			end
 			StylesFunction[style](self)
 			return
 		end
+
+		if self.Yielding == false then
+			coroutine.wrap(StylesFunction.EasingStyle)(self)
+			return
+		end
+
 		StylesFunction.EasingStyle(self)
-		--return self.FullString
 	end
-	
+
 	function StringAction:IsCompleted()
 		return self.Completed or false
 	end
-	
+
 	function StringAction:Hash()
 		self.Hashed = createHash(#self.FullString)
 		self.TextDisplay.Text = self.Hashed
 	end
-	
+
 	function StringAction:Cancel()
 		self.Completed = true
 		self.tween:Cancel()
 	end
-	
+
 	function StringAction:Pause()
 		self.tween:Pause()
 	end
-	
+
 	function StringAction:Resume()
 		self.tween:Play()
 	end
-	
+
 	function StringAction:GetState()
 		return self.tween.PlaybackState
 	end
