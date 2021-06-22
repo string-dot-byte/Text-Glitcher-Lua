@@ -1,5 +1,5 @@
 local StringLib = {}
-local class = require(script.Parent.Class)
+local class = require(script.Class)
 
 local TweenService = game:GetService('TweenService')
 local RunService = game:GetService('RunService')
@@ -18,6 +18,7 @@ local Possible, createHash do
 		for i = 1, amount do
 			s ..= Possible[math.random(1, #Possible)]
 		end
+		
 		return s
 	end
 
@@ -51,7 +52,7 @@ local StylesFunction = {} do
 		local Suffix = self.Suffix or ''
 
 		local Int = Instance.new('IntValue')
-		Int.Value = 0 -- Hehe :)
+		Int.Value = 0
 
 		local tween = TweenService:Create(Int, self.TweenInfo, {Value = #FullString})
 		self.tween = tween
@@ -62,6 +63,31 @@ local StylesFunction = {} do
 			local Suffix = Int.Value == #FullString and '' or Suffix
 			self.TextDisplay.Text = FullString:sub(1, Int.Value) .. Suffix
 		end
+		self.Completed = true
+		Int:Destroy()
+	end
+	
+	StylesFunction.IndexUpdate = function(self)
+		local FullString = self.FullString
+
+		local Int = Instance.new('IntValue')
+		Int.Value = 0
+
+		local tween = TweenService:Create(Int, self.TweenInfo, {Value = #FullString})
+		self.tween = tween
+		tween:Play()
+		tween.Completed:Connect(function()self.Completed = true end)
+
+		local LastIndex, LastHash = 1, nil
+		while not self.Completed do wait()
+			local newHash = createHash(1)
+			if self.SingleHash and LastHash and Int.Value == LastIndex then
+				newHash = LastHash
+			end;LastHash = newHash;
+			self.TextDisplay.Text = FullString:sub(1, math.abs(Int.Value-1)) .. newHash .. FullString:sub(Int.Value+1)
+			LastIndex = Int.Value
+		end;self.TextDisplay.Text = FullString;
+		
 		self.Completed = true
 		Int:Destroy()
 	end
