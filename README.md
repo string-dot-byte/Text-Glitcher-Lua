@@ -84,3 +84,5 @@ See more here: https://developer.roblox.com/en-us/api-reference/enum/PlaybackSta
 Current styles are:
 * `Suffix`: Where the text typewrites itself with an optional character at the end
 Pass in the `Suffix` index as string in the information when creating the glitcher.
+
+* `IndexUpdate`: The current index character will be the on which will ONLY have a weird character. Example: TEST (Index 2) -> T\*ST
