@@ -1,5 +1,4 @@
 local StringLib = {}
-local class = require(script.Class)
 
 local TweenService = game:GetService('TweenService')
 local RunService = game:GetService('RunService')
@@ -15,6 +14,15 @@ local Possible, createHash do
 	createHash = function(amount)
 		if amount <= 0 then return '' end
 		local s = ''
+		
+		if amount >= 40 then -- quicker than normal concatenation for larger strings
+			for i = 1, amount do
+				s ..= i
+			end
+			
+			return s
+		end
+		
 		for i = 1, amount do
 			s ..= Possible[math.random(1, #Possible)]
 		end
@@ -93,11 +101,13 @@ local StylesFunction = {} do
 	end
 end
 
-local StringAction = class() do
-	function StringAction:init(FullString, TextDisplayer, info)
+local StringAction = {} do
+	StringAction.__index = StringAction
+	function StringAction.new(FullString, TextDisplayer, info)
 		if type(FullString) ~= 'string' then
 			warn('Miss used type for first argument; Use a string instead.')
 		end
+		local self = setmetatable({}, StringAction)
 
 		self.FullString = FullString
 		self.TextDisplay = TextDisplayer
@@ -112,6 +122,8 @@ local StringAction = class() do
 		self.Suffix = info.Suffix
 
 		self.TweenInfo = info.TweenInfo
+		
+		return self
 	end
 
 	function StringAction:GlitchText(style)
@@ -160,8 +172,4 @@ local StringAction = class() do
 end
 
 
-return setmetatable({new = StringAction}, {
-	__call = function (_, ...)
-		return StringAction(...)
-	end
-})
+return StringAction
