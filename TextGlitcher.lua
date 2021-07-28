@@ -5,6 +5,16 @@ local RunService = game:GetService('RunService')
 
 
 -- Glitch text setup
+local sub = string.sub
+local StringToTable = function(str)
+	local res = {}
+	for i = 1, #str do
+		res[i] = sub(str, i, i)
+	end
+	
+	return res
+end
+
 local Possible, createHash do
 	Possible = {
 		'-','+','*','/','|','}','{','[',']','~','\\','"',
@@ -12,16 +22,19 @@ local Possible, createHash do
 		'(','*','&','%','$','#','@','!'
 	}
 	createHash = function(amount)
+		amount -= 1 -- idfk
 		if amount <= 0 then return '' end
 		local s = ''
 		
-		if amount >= 40 then -- quicker than normal concatenation for larger strings
+		--[===[if amount >= 60 then -- table.concat is quicker than normal concatenation for larger strings
+			
+			local res = {}
 			for i = 1, amount do
-				s ..= i
+				res[i] = Possible[math.random(1, #Possible)]
 			end
 			
-			return s
-		end
+			return table.concat(res, '')
+		end]===]
 		
 		for i = 1, amount do
 			s ..= Possible[math.random(1, #Possible)]
