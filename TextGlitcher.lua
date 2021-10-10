@@ -60,7 +60,7 @@ local StylesFunction = {} do
 
 		local SingleHash = self.Hashed or createHash(#FullString)
 
-		while not self.Completed do wait()
+		while not self.Completed do task.wait()
 			local Hash = self.SingleHash and SingleHash:sub(self.Reversed and 1 or Int.Value, self.Reversed and #FullString-Int.Value or #FullString) or createHash(#FullString-Int.Value)
 			self.TextDisplay.Text = self.Reversed and Hash .. FullString:sub(#FullString-Int.Value+1, #FullString) or FullString:sub(1, Int.Value) .. Hash
 		end
@@ -80,7 +80,7 @@ local StylesFunction = {} do
 		tween:Play()
 		tween.Completed:Connect(function()self.Completed = true end)
 
-		while not self.Completed do wait()
+		while not self.Completed do task.wait()
 			local Suffix = Int.Value == #FullString and '' or Suffix
 			self.TextDisplay.Text = FullString:sub(1, Int.Value) .. Suffix
 		end
@@ -100,7 +100,7 @@ local StylesFunction = {} do
 		tween.Completed:Connect(function()self.Completed = true end)
 
 		local LastIndex, LastHash = 1, nil
-		while not self.Completed do wait()
+		while not self.Completed do task.wait()
 			local newHash = createHash(1)
 			if self.SingleHash and LastHash and Int.Value == LastIndex then
 				newHash = LastHash
