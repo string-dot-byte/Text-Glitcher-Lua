@@ -1,43 +1,58 @@
-local StringLib = {}
-
 local TweenService = game:GetService('TweenService')
 local RunService = game:GetService('RunService')
 
 
--- Glitch text setup
-local sub = string.sub
-local StringToTable = function(str)
+--[===[
+		SETUP
+  ]===]
+export type GlitchAction = {
+	FullString: string,
+	TextDisplay: TextLabel | TextBox | TextButton,
+	TweenInfo: TweenInfo,
+	GlitchCharacters: {string},
+	Suffix: string,
+	Reversed: boolean,
+	SingleGlitch: boolean,
+	Completed: boolean,
+	MaintainEndTextAfterGlitch: boolean,
+	UpdateRate: number,
+	tween: TweenBase
+}
+
+local StringToTable = function(str: string)
 	local res = {}
-	for i = 1, #str do
-		res[i] = sub(str, i, i)
+	
+	for c in str:gmatch'.' do
+		table.insert(res, c)
 	end
 	
 	return res
 end
 
-local Possible, createHash do
-	Possible = {
+local PossibleGlitchCharacters: {string}, createGlitch do
+	PossibleGlitchCharacters = {
 		'-','+','*','/','|','}','{','[',']','~','\\','"',
 		':',';','?','.','>','<','=','+','-','_',')',
 		'(','*','&','%','$','#','@','!'
 	}
-	createHash = function(amount)
-		amount -= 1 -- idfk
+	createGlitch = function(amount: number, customCharacters: {string}?): string
+		--amount -= 1
 		if amount <= 0 then return '' end
+		
 		local s = ''
 		
-		--[===[if amount >= 60 then -- table.concat is quicker than normal concatenation for larger strings
+		--[==[if amount >= 60 then -- table.concat is quicker than normal concatenation for larger strings
 			
 			local res = {}
 			for i = 1, amount do
-				res[i] = Possible[math.random(1, #Possible)]
+				res[i] = PossibleGlitchCharacters[math.random(1, #PossibleGlitchCharacters)]
 			end
 			
 			return table.concat(res, '')
-		end]===]
+		end]==]
 		
 		for i = 1, amount do
-			s ..= Possible[math.random(1, #Possible)]
+			s ..= customCharacters[math.random(1, #customCharacters)]
 		end
 		
 		return s
@@ -46,77 +61,63 @@ local Possible, createHash do
 	math.randomseed(tick() ^ 6)
 end
 
+
+--[===[
+		STYLES
+  ]===]
 local StylesFunction = {} do
-	StylesFunction.EasingStyle = function(self)
+	StylesFunction.EasingStyle = function(self, Int: IntValue)
 		local FullString = self.FullString
 
-		local Int = Instance.new('IntValue')
-		Int.Value = 0 -- Hehe :)
+		local SingleGlitch = self.Glitched or createGlitch(#FullString, self.GlitchCharacters)
 
-		local tween = TweenService:Create(Int, self.TweenInfo, {Value = #FullString})
-		self.tween = tween
-		tween:Play()
-		tween.Completed:Connect(function()self.Completed = true end)
-
-		local SingleHash = self.Hashed or createHash(#FullString)
-
-		while not self.Completed do task.wait()
-			local Hash = self.SingleHash and SingleHash:sub(self.Reversed and 1 or Int.Value, self.Reversed and #FullString-Int.Value or #FullString) or createHash(#FullString-Int.Value)
-			self.TextDisplay.Text = self.Reversed and Hash .. FullString:sub(#FullString-Int.Value+1, #FullString) or FullString:sub(1, Int.Value) .. Hash
+		while not self.Completed do
+			local ThisGlitch = self.SingleGlitch and SingleGlitch:sub(self.Reversed and 1 or Int.Value, self.Reversed and #FullString-Int.Value or #FullString) or createGlitch(#FullString-Int.Value, self.GlitchCharacters)
+			self.TextDisplay.Text = self.Reversed and ThisGlitch .. FullString:sub(#FullString-Int.Value+1, #FullString) or FullString:sub(1, Int.Value) .. ThisGlitch
+			
+			task.wait(self.UpdateRate)
 		end
-		self.Completed = true
-		Int:Destroy() -- destroy
 	end
 
-	StylesFunction.Suffix = function(self)
+	StylesFunction.Suffix = function(self, Int: IntValue)
 		local FullString = self.FullString
 		local Suffix = self.Suffix or ''
 
-		local Int = Instance.new('IntValue')
-		Int.Value = 0
-
-		local tween = TweenService:Create(Int, self.TweenInfo, {Value = #FullString})
-		self.tween = tween
-		tween:Play()
-		tween.Completed:Connect(function()self.Completed = true end)
-
-		while not self.Completed do task.wait()
-			local Suffix = Int.Value == #FullString and '' or Suffix
+		while not self.Completed do
+			local Suffix = self.MaintainEndTextAfterGlitch and (Int.Value == #FullString and '' or Suffix) or Suffix
 			self.TextDisplay.Text = FullString:sub(1, Int.Value) .. Suffix
+			
+			task.wait(self.UpdateRate)
 		end
-		self.Completed = true
-		Int:Destroy()
 	end
 	
-	StylesFunction.IndexUpdate = function(self)
+	StylesFunction.IndexUpdate = function(self, Int: IntValue)
 		local FullString = self.FullString
-
-		local Int = Instance.new('IntValue')
-		Int.Value = 0
-
-		local tween = TweenService:Create(Int, self.TweenInfo, {Value = #FullString})
-		self.tween = tween
-		tween:Play()
-		tween.Completed:Connect(function()self.Completed = true end)
-
-		local LastIndex, LastHash = 1, nil
-		while not self.Completed do task.wait()
-			local newHash = createHash(1)
-			if self.SingleHash and LastHash and Int.Value == LastIndex then
-				newHash = LastHash
-			end;LastHash = newHash;
-			self.TextDisplay.Text = FullString:sub(1, math.abs(Int.Value-1)) .. newHash .. FullString:sub(Int.Value+1)
-			LastIndex = Int.Value
-		end;self.TextDisplay.Text = FullString;
 		
-		self.Completed = true
-		Int:Destroy()
+		local LastIndex, LastGlitch = 1, nil
+		while not self.Completed do
+			local newGlitch = createGlitch(1, self.GlitchCharacters)
+			if self.SingleGlitch and LastGlitch and Int.Value == LastIndex then
+				newGlitch = LastGlitch
+			end;LastGlitch = newGlitch;
+			self.TextDisplay.Text = FullString:sub(1, math.abs(Int.Value-1)) .. newGlitch .. FullString:sub(Int.Value+1)
+			LastIndex = Int.Value
+			
+			task.wait(self.UpdateRate)
+		end
+		
+		self.TextDisplay.Text = self.MaintainEndTextAfterGlitch and self.TextDisplay.Text or FullString
 	end
 end
 
+
+--[===[
+		MAIN
+  ]===]
 local StringAction = {} do
 	StringAction.__index = StringAction
-	function StringAction.new(FullString, TextDisplayer, info)
+	
+	function StringAction.new(FullString: string, TextDisplayer: TextLabel | TextBox | TextButton, info: {}): GlitchAction
 		if type(FullString) ~= 'string' then
 			warn('Miss used type for first argument; Use a string instead.')
 		end
@@ -124,62 +125,67 @@ local StringAction = {} do
 
 		self.FullString = FullString
 		self.TextDisplay = TextDisplayer
-		if info.Yielding == false then
-			self.Yielding = false
-		else
-			self.Yielding = true
-		end
 		self.Reversed = info.Reversed or false
-		self.SingleHash = info.SingleHash or false
+		self.SingleGlitch = info.SingleGlitch or false
+		self.MaintainEndTextAfterGlitch = info.MaintainEndTextAfterGlitch
+		self.UpdateRate = info.UpdateRate
 
-		self.Suffix = info.Suffix
+		self.Suffix = info.Suffix or ''
 
-		self.TweenInfo = info.TweenInfo
+		self.TweenInfo = info.TweenInfo or TweenInfo.new(1)
+		
+		self.GlitchCharacters = info.GlitchCharacters or PossibleGlitchCharacters
 		
 		return self
 	end
 
-	function StringAction:GlitchText(style)
+	function StringAction:GlitchText(style: string?)
+		if self.tween and self:GetState() == Enum.PlaybackState.Playing then return warn('Can not glitch text while it is already being glitched') end
+		self.Completed = false
+		
+		local Int = Instance.new('IntValue')
+		Int.Value = 0
+		
+		local tween = TweenService:Create(Int, self.TweenInfo, {Value = #self.FullString})
+		self.tween = tween
+		tween.Completed:Connect(function()self.Completed = true Int:Destroy()end)
+		tween:Play()
+		
 		if StylesFunction[style] then
-			if self.Yielding == false then
-				coroutine.wrap(StylesFunction[style])(self)
-				return
-			end
-			StylesFunction[style](self)
+			StylesFunction[style](self, Int)
 			return
 		end
-
-		if self.Yielding == false then
-			coroutine.wrap(StylesFunction.EasingStyle)(self)
-			return
-		end
-
-		StylesFunction.EasingStyle(self)
+		
+		StylesFunction.EasingStyle(self, Int)
 	end
 
-	function StringAction:IsCompleted()
+	function StringAction:IsCompleted(): boolean
 		return self.Completed or false
 	end
 
-	function StringAction:Hash()
-		self.Hashed = createHash(#self.FullString)
-		self.TextDisplay.Text = self.Hashed
+	function StringAction:GlitchOnce(customCharacters: {string}?)
+		self.Glitched = createGlitch(#self.FullString, customCharacters or self.GlitchCharacters)
+		self.TextDisplay.Text = self.Glitched
 	end
 
 	function StringAction:Cancel()
+		if not self.tween then return warn('There is no tween connected') end
 		self.Completed = true
 		self.tween:Cancel()
 	end
 
 	function StringAction:Pause()
+		if not self.tween then return warn('There is no tween connected') end
 		self.tween:Pause()
 	end
 
 	function StringAction:Resume()
+		if not self.tween then return warn('There is no tween connected') end
 		self.tween:Play()
 	end
 
-	function StringAction:GetState()
+	function StringAction:GetState(): Enum.PlaybackState
+		if not self.tween then return warn('There is no tween connected') end
 		return self.tween.PlaybackState
 	end
 end
