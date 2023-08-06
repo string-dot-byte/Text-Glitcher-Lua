@@ -8,8 +8,10 @@ Text-Glitcher is a Roblox module which handles text glitching effects with symbo
  - You can customize your array easily for the unknown symbols section
 - This module provides different glitching styles
 
-![ezgif-2-ab923b990e8b|488x114](upload://fQDcjynLY8qgXKWwcit87IRqJgA.gif) 
-![3M75PUZhkU|618x110](upload://dIR49fv5XX1WOr2hiydDHyTjPhQ.gif) 
+<p align="center">
+  <img src="https://cdn.discordapp.com/attachments/577991646449238016/847567303116849152/ezgif-2-ab923b990e8b.gif" alt="Glitcher demo" height="200">
+  <img src="https://cdn.discordapp.com/attachments/577991646449238016/847567323790966814/3M75PUZhkU.gif" alt="Glitcher demo" height="200">
+</p>
 
 With the utilisation of TweenService, I have brought to you this module which permits text tweens almost the same way you would do for normal tweening.
 
@@ -101,6 +103,3 @@ You can also grab the current tween with `Glitcher.tween`. This could be used to
 Pass in the `Suffix` index as string in the information when creating the glitcher.
 
 * `IndexUpdate`: The current index character will be the on which will ONLY have a weird character. Example: TEST (Index 2) -> T\*ST (depending on the randomized character selected)
-
-
----
