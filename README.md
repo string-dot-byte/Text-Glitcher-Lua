@@ -53,6 +53,7 @@ The options table isn't necessary although it's good to add it for a neat and ap
 | UpdateRate | The rate at which the glitch effect is updated onto the label | nil | Number
 | TweenInfo | Classic TweenInfo created with `TweenInfo.new()` | nil | TweenInfo
 | GlitchCharacters | List of characters to grab for the glitch efffect | {...} | Table
+| UnglitchedEvent | BindableEvent that gets fired when a character is changed | nil | BindableEvent
 
 
 
