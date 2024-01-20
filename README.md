@@ -29,7 +29,7 @@ We initialize the Glitcher with the `.new` function and pass the end text as the
 
 After that, we call the `GlitchText` method to start glitching the text.
 
-The options table isn't necessary although it's good to add it for a neat and appealing animation. If nothing is provided, it will default (see table below).
+The options table isn't necessary, although it's good to add it for a neat and appealing animation. If nothing is provided, it will default (see table below).
 
 
 
@@ -39,7 +39,7 @@ The options table isn't necessary although it's good to add it for a neat and ap
 
 ### TextGlitcher.new(EndString: string, TextObject: TextLabel \| TextButton \| TextBox, {Dictionary options})
 
-*Note: TextObject would be thee UI the text would be transmitted onto*
+*Note: TextObject would be the UI the text would be transmitted onto*
 
 
 ## Options
